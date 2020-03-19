@@ -22,6 +22,7 @@ nameList = ['Olivia', 'Ruby', 'Emily', 'Grace', 'Jessica', 'Chloe',
 'Aimee', 'Hollie', 'Lydia', 'Evelyn', 'Alexandra', 'Maria', 'Francesca', 
 'Tilly', 'Florence', 'Alicia', 'Abbie', 'Emilia', 'Courtney', 'Maryam', 'Esme']
 
+p = []
 
 class Stu :
     def __init__(self,name=None,age=0) :
@@ -32,10 +33,12 @@ class Stu :
 
 @app.route('/respond',methods=['GET','POST'])
 def handleResp(request) :
+    global p
+
     print("Request Received")
     print(request)
     a = {}
-    b = []
+    b = list(p)
     for i in range(100) :
         A = Stu(random.choice(nameList),random.randint(1,random.choice([2,50,100])))
         a[i] = A._dict()
@@ -43,11 +46,28 @@ def handleResp(request) :
     return json({'data':b})
 
 @app.route('/respond_2',methods=['GET','POST'])
-def handleResp(request) :
+def Fetch(request) :
     print("Request Received")
     print(request)
     
     return json(Stu("Name",100)._dict())
+
+@app.route('/add',methods=['POST'])
+def Add(request) :
+    global p
+
+    print("Request Received") 
+    print(request)
+    a = request.json
+    b = type(a)
+    print("Body :",a,b) 
+
+    x = Stu(a['name'],int(a['age']))
+    y = x._dict()
+    if y not in p :
+        p.append(y)
+
+    return json(y)
     
 if __name__ == "__main__" :
     try :
